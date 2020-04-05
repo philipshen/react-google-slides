@@ -5,9 +5,8 @@
 import * as React from "react";
 
 export type Props = {
+  start: 'boolean',
   slidesLink: string;
-  loop: boolean;
-  slideDuration: number;
   showControls: boolean;
   height: string | number;
   width: string | number;
@@ -17,14 +16,11 @@ export type Props = {
 /**
  * Generates iframe compatible url to display the presentation
  * @param presentationKey The Google Slides presentation key
- * @param loop Boolean for whether the slides should loop after finishing
- * @param slideDuration Duration in seconds for how long each slide should be
  * @param showControls Boolean for whether to display the Google Slides controls
  */
 const constructUrl = (
   presentationKey: string | null,
-  loop: boolean,
-  slideDuration: number,
+  start: boolean,
   showControls: boolean
 ): string => {
   if (!presentationKey) {
@@ -33,9 +29,7 @@ const constructUrl = (
 
   let baseUrl = "https://docs.google.com/presentation/d/";
   baseUrl += `${presentationKey}/embed?`;
-  baseUrl += `start=true`;
-  baseUrl += `&loop=${loop ? "true" : "false"}`;
-  baseUrl += `&delayms=${slideDuration * 1000}`;
+  baseUrl += `start=${start}`;
 
   if (!showControls) {
     baseUrl += `&rm=minimal`;
@@ -63,17 +57,16 @@ export default class ReactGoogleSlides extends React.Component<Props> {
   public static defaultProps = {
     width: `640px`,
     height: `480px`,
+    start: false,
     slidesLink: `https://docs.google.com/presentation/d/1OHEMQ0W-3iXvbxS0g86oMHlhVgKaYP7d3-CUhSHdCjs/edit?usp=sharing`,
     loop: false,
-    slideDuration: 2,
     showControls: false
   };
 
   render() {
     const {
+      start,
       slidesLink,
-      loop,
-      slideDuration,
       showControls,
       width,
       height,
@@ -82,8 +75,7 @@ export default class ReactGoogleSlides extends React.Component<Props> {
     const presentationKey = extractSlidesKey(slidesLink);
     const url = constructUrl(
       presentationKey,
-      loop,
-      slideDuration,
+      start,
       showControls
     );
 
