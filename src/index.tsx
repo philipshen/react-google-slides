@@ -5,7 +5,7 @@
 import * as React from "react";
 
 export type Props = {
-  start: 'boolean',
+  start: boolean,
   slidesLink: string;
   showControls: boolean;
   height: string | number;
